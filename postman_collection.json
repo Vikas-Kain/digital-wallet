@@ -1,0 +1,182 @@
+{
+    "info": {
+        "name": "Digital Wallet API Tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. User Management",
+            "item": [
+                {
+                    "name": "Register User",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/users/register",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Login User",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/users/login",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Currency Management",
+            "item": [
+                {
+                    "name": "Create Currency (Admin)",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/currencies",
+                        "headers": {
+                            "Authorization": "Bearer {{adminToken}}"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"USD\",\n    \"name\": \"US Dollar\",\n    \"symbol\": \"$\",\n    \"exchangeRate\": 1.0\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Currencies",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/api/currencies"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Transactions",
+            "item": [
+                {
+                    "name": "Deposit Cash",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/transactions/deposit",
+                        "headers": {
+                            "Authorization": "Bearer {{userToken}}"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 1000,\n    \"currencyId\": \"{{usdCurrencyId}}\",\n    \"description\": \"Initial deposit\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Withdraw Cash",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/transactions/withdraw",
+                        "headers": {
+                            "Authorization": "Bearer {{userToken}}"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 100,\n    \"currencyId\": \"{{usdCurrencyId}}\",\n    \"description\": \"ATM withdrawal\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Transfer to Another User",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{baseUrl}}/api/transactions/transfer",
+                        "headers": {
+                            "Authorization": "Bearer {{userToken}}"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"recipientId\": \"{{recipientId}}\",\n    \"amount\": 50,\n    \"currencyId\": \"{{usdCurrencyId}}\",\n    \"description\": \"Payment for services\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Transaction History",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/api/transactions",
+                        "headers": {
+                            "Authorization": "Bearer {{userToken}}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Admin Features",
+            "item": [
+                {
+                    "name": "Get Flagged Transactions",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/api/transactions/flagged",
+                        "headers": {
+                            "Authorization": "Bearer {{adminToken}}"
+                        }
+                    }
+                },
+                {
+                    "name": "Update Exchange Rate",
+                    "request": {
+                        "method": "PUT",
+                        "url": "{{baseUrl}}/api/currencies/EUR/exchange-rate",
+                        "headers": {
+                            "Authorization": "Bearer {{adminToken}}"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"exchangeRate\": 1.1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
