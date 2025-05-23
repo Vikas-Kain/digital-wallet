@@ -13,12 +13,14 @@ router.post('/auth/login', userController.login);
 // User routes
 router.get('/users/profile', protect, userController.getProfile);
 router.put('/users/profile', protect, userController.updateProfile);
+router.get('/users/top', protect, admin, userController.getTopUsers);
 
 // Transaction routes
 router.post('/transactions/deposit', protect, transactionController.deposit);
 router.post('/transactions/withdraw', protect, transactionController.withdraw);
 router.post('/transactions/transfer', protect, transactionController.transfer);
 router.get('/transactions', protect, transactionController.getTransactions);
+router.get('/transactions/flagged', protect, admin, transactionController.getFlaggedTransactions);
 
 // Currency routes
 router.get('/currencies', currencyController.getCurrencies);

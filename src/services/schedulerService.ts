@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import { Transaction, TransactionStatus } from '../models/Transaction';
 import { User } from '../models/User';
-import { checkTransactionFraud } from '../utils/fraudDetection';
+import { checkTransactionFraud } from './fraudDetection';
 import { sendFraudAlert } from './emailService';
 
 // Run daily at midnight

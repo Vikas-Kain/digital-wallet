@@ -12,7 +12,7 @@ const generateToken = (id: string): string => {
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { email, password, firstName, lastName } = req.body;
+        const { email, password, firstName, lastName, isAdmin } = req.body;
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -23,7 +23,8 @@ export const register = async (req: Request, res: Response) => {
             email,
             password,
             firstName,
-            lastName
+            lastName,
+            isAdmin: isAdmin || false
         });
 
         res.status(201).json({
@@ -31,6 +32,7 @@ export const register = async (req: Request, res: Response) => {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
+            isAdmin: user.isAdmin,
             token: generateToken(user._id)
         });
     } catch (error) {
@@ -100,5 +102,37 @@ export const updateProfile = async (req: Request, res: Response) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Error updating profile', error });
+    }
+};
+
+export const getTopUsers = async (req: Request, res: Response) => {
+    try {
+        // Get all users and sort them by their total balance across all currencies
+        const users = await User.find()
+            .select('-password')
+            .populate('balances.currency', 'code name symbol');
+
+        // Calculate total balance for each user
+        const usersWithTotalBalance = users.map(user => {
+            const totalBalance = user.balances.reduce((sum, balance) => sum + balance.amount, 0);
+            return {
+                ...user.toObject(),
+                totalBalance
+            };
+        });
+
+        // Sort users by total balance in descending order
+        const sortedUsers = usersWithTotalBalance.sort((a, b) => b.totalBalance - a.totalBalance);
+
+        // Get top 10 users
+        const topUsers = sortedUsers.slice(0, 10);
+
+        res.json(topUsers);
+    } catch (error) {
+        console.error('Error getting top users:', error);
+        res.status(500).json({
+            message: 'Error getting top users',
+            error: error instanceof Error ? error.message : error
+        });
     }
 }; 
